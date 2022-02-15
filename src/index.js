@@ -11,6 +11,10 @@ const options = {
   html: "<b>Hello world?</b>",
 };
 
+const sendDefaultEmail = async () => {
+  await sendEmail(options)
+}
+
 const sendEmailtWithAttachmentsByPath = async () => {
   const files = await fs.readdir(dirname)
   options.subject= "Hello (attachments by path) ✔"
@@ -44,5 +48,6 @@ const sendEmailtWithAttachmentsByBufer = async () => {
   await sendEmail(options)
 }
 
+sendDefaultEmail();
 // sendEmailtWithAttachmentsByPath();
 // sendEmailtWithAttachmentsByBufer();
