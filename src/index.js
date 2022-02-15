@@ -1,36 +1,25 @@
-const nodemailer = require('nodemailer')
-const { config } = require('dotenv')
-
-config()
-
-const { MAIL_USER, MAIL_PASS } = process.env
-
-const setupMailer = () => {
-    return nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-          user: MAIL_USER,
-          pass: MAIL_PASS,
-        },
-      })
-}
-
-const sendEmail = (options) => {
-    options.from = `"Odie study 👻" ${MAIL_USER}`
-
-    const transport = setupMailer()
-    return transport.sendMail(options)
-}
+const path = require("path");
+const fs = require("fs").promises;
+const { sendEmail } = require('./mail')
 
 const main = async () => {
-    const options = {
-        to: "odilomar.junior@gmail.com", 
-        subject: "Hello ✔",
-        text: "Hello world?",
-        html: "<b>Hello world?</b>",
-    }
+  const dirname = path.join(__dirname, "archive");
+  const files = await fs.readdir(dirname);
 
-    await sendEmail(options)
-}
+  const options = {
+    to: "odilomar.junior@gmail.com",
+    subject: "Hello ✔",
+    text: "Hello world?",
+    html: "<b>Hello world?</b>",
+    attachments: files.map((file) => {
+      return {
+        filename: file,
+        path: path.join(dirname, file),
+      };
+    }),
+  };
 
-main()
+  await sendEmail(options);
+};
+
+main();
